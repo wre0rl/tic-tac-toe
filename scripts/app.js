@@ -26,7 +26,7 @@ const Gameboard = (function() {
   };
 })();
 
-function Player(name, mark, isActive) {
+function Player(name, mark) {
   this.name = name;
   this.mark = mark; // 1 = X, 2 = O
 }
