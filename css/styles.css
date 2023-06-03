@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100svh;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  height: 60%;
+  width: 30%;
+  display: grid;
+  grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
+}
+
+.board__square {
+  border: 1px solid #000;
+  border-top-width: 0;
+  border-left-width: 0;
+}
+
+.board__square:nth-child(3n+0) {
+  border-right-width: 0;
+}
+
+.board__square:nth-child(n+7) {
+  border-bottom-width: 0;
+}

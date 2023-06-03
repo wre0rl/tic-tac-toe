@@ -11,18 +11,16 @@ const Gameboard = (function() {
     }
   }
 
-  const get = () => board;
+  const getBoard = () => board;
 
-  const mark = (player, row, column) => {
-    if (board[row][column] !== 0) {
-      return console.log('That square is marked!');
-    }
-    return board[row][column] = player;
+  const markSquare = (player, row, column) => {
+    const square = board[row][column];
+    return square ? console.log('That square is marked!') : (board[row][column] = player);
   }
 
   return {
-    get,
-    mark
+    getBoard,
+    markSquare
   };
 })();
 
@@ -39,9 +37,9 @@ const Game = (function() {
   let activePlayer = players[0];
 
   const play = (row, column) => {
-    const mark = Gameboard.mark(activePlayer.mark, row, column);
-    if (mark === activePlayer.mark) switchActivePlayer();
-    return Gameboard.get();
+    const currentPlayerMark = getActivePlayer().mark;
+    const squareMarked = Gameboard.markSquare(currentPlayerMark, row, column);
+    return squareMarked ? (switchActivePlayer(), Gameboard.getBoard()) : Gameboard.getBoard();
   }
 
   const switchActivePlayer = () => {
