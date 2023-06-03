@@ -6,6 +6,7 @@
 
 body {
   height: 100svh;
+  background-color: #000;
 }
 
 .container {
@@ -16,14 +17,14 @@ body {
 }
 
 .board {
-  height: 60%;
-  width: 30%;
+  height: 350px;
+  width: 350px;
   display: grid;
   grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
 }
 
 .board__square {
-  border: 1px solid #000;
+  border: 3px solid #fff;
   border-top-width: 0;
   border-left-width: 0;
 }
