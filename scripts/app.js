@@ -49,6 +49,7 @@ const Game = (function() {
   let activePlayer = players[0];
   let gameState = 0; // 1: win, 2: tie
 
+  // TODO: Separate the return
   const play = (row, column) => {
     const isSquareMarked = markSquare(row, column);
 
