@@ -16,6 +16,7 @@ const Gameboard = (() => {
 
   const resetBoard = () => createBoard();
 
+  // TODO: Do not return this, create isSquareEmpty method for checking
   const markSquare = (mark, row, column) => {
     const isSquareEmpty = (board[row][column] === '');
     return isSquareEmpty ? (board[row][column] = mark) : false;
