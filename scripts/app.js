@@ -56,7 +56,7 @@ const Game = (function() {
       return console.log('That square is marked!');
     }
 
-    const isWinner = checkWinner(row, column, getActivePlayer().mark);
+    const isWinner = checkForWin(row, column, getActivePlayer().mark);
     if (isWinner) {
       return updateGameState(1);
     }
@@ -74,7 +74,7 @@ const Game = (function() {
     return Gameboard.markSquare(currentPlayerMark, row, column);
   };
 
-  const checkWinner = (row, column, squareMarked) => {
+  const checkForWin = (row, column, squareMarked) => {
     const board = Gameboard.getBoard();
     const isRowWinner = checkRow(row, squareMarked, board);
     const isColumnWinner = checkColumn(column, squareMarked, board);
