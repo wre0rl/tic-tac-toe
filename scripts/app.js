@@ -39,42 +39,42 @@ const Game = (function() {
   const play = (row, column) => {
     const currentPlayerMark = getActivePlayer().mark;
     const squareMarked = Gameboard.markSquare(currentPlayerMark, row, column);
-    // Refactor the check winner logic, and check draw
-    const a = checkRow(row, squareMarked);
-    const b = checkColumn(column, squareMarked);
-    const c = checkDiagonal(squareMarked);
-    a || b || c ? console.log(`${getActivePlayer().name} is the winner`) : null;
-    return squareMarked ? (switchActivePlayer(), Gameboard.getBoard()) : Gameboard.getBoard(); // Remove this...
+    const isWinner = checkWinner(row, column, squareMarked);
+    if (isWinner) {
+      console.log(`${getActivePlayer().name} is the winner`);
+      // TODO: Reset
+    }
+    // TODO: wtf is this...
+    return squareMarked ? (switchActivePlayer(), Gameboard.getBoard()) : Gameboard.getBoard();
   }
 
-  const checkRow = (row, squareMarked) => {
+  const checkWinner = (row, column, squareMarked) => {
     const board = Gameboard.getBoard();
-    return board[row].every((col) => col === squareMarked);
+    const isRowWinner = checkRow(row, squareMarked, board);
+    const isColumnWinner = checkColumn(column, squareMarked, board);
+    const isDiagonalWinner = checkDiagonal(squareMarked, board);
+
+    return (
+      isRowWinner || 
+      isColumnWinner || 
+      isDiagonalWinner
+    ) ? true : false;
   };
 
-  const checkColumn = (column, squareMarked) => {
-    const board = Gameboard.getBoard();
-    let temp = [];
-    board.forEach((row) => {
-      temp.push(row[column]);
-    });
-    return temp.every((col) => col === squareMarked);
+  const checkRow = (row, squareMarked, board) => {
+    return board[row].every((mark) => mark === squareMarked);
   };
 
-  const checkDiagonal = (squareMarked) => {
-    let board = Gameboard.getBoard();
-    let leftDiag = [];
-    let leftCol = 0;
-    let rightDiag = [];
-    let rightCol = 2;
-    board.forEach((row) => {
-      leftDiag.push(row[leftCol++]);
-      rightDiag.push(row[rightCol--]);
-    });
+  const checkColumn = (column, squareMarked, board) => {
+    const col = board.map((row) => row[column]);
+    return col.every((mark) => mark === squareMarked);
+  };
 
-    const isWinLeft = leftDiag.every((col) => col === squareMarked);
-    const isWinRight = rightDiag.every((col) => col === squareMarked);
-    return isWinLeft || isWinRight ? true : false;
+  const checkDiagonal = (squareMarked, board) => {
+    const leftDiagonal = [board[0][0], board[1][1], board[2][2]];
+    const rightDiagonal = [board[0][2], board[1][1], board[2][0]];
+    return leftDiagonal.every((mark) => mark === squareMarked) ||
+           rightDiagonal.every((mark) => mark === squareMarked)
   };
 
   const switchActivePlayer = () => {
