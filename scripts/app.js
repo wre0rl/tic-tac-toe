@@ -36,14 +36,13 @@ const Gameboard = (() => {
   };
 })();
 
-function Player(name, mark) {
-  this.name = name;
-  this.mark = mark;
-}
+const Player = (name, mark) => {
+  return { name, mark };
+};
 
 const Game = (function() {
-  const player1 = new Player('Player 1', 'X');
-  const player2 = new Player('Player 2', 'O');
+  const player1 = Player('Player 1', 'X');
+  const player2 = Player('Player 2', 'O');
   const players = [player1, player2];
 
   let activePlayer = players[0];
@@ -113,8 +112,6 @@ const Game = (function() {
 
   const getActivePlayer = () => activePlayer;
 
-  const getPlayers = () => players;
-
   const getGameState = () => gameState;
 
   const updateGameState = (state) => {
@@ -133,7 +130,6 @@ const Game = (function() {
 
   return {
     play,
-    getPlayers,
     getActivePlayer,
     getGameState,
     reset
