@@ -51,6 +51,7 @@ const Game = (function() {
 
   // TODO: Separate the return
   const play = (row, column) => {
+    // Use ifSquareEmpty > marksquare ?
     const isSquareMarked = markSquare(row, column);
 
     if (!isSquareMarked) {
@@ -62,6 +63,7 @@ const Game = (function() {
       return updateGameState(1);
     }
 
+    // Check for tie function?
     const isBoardNotFull = Gameboard.isBoardNotFull();
     if (!isBoardNotFull) {
       return updateGameState(2);
