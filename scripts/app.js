@@ -157,34 +157,23 @@ const UI = (() => {
     });
   };
 
-  const renderPlayerTurn = () => {
-    if (Game.getWinner().length > 0) {
-      playerTurnDiv.textContent = `${Game.getActivePlayer().name} is the winner!`;
-    } else {
-      playerTurnDiv.textContent = `${Game.getActivePlayer().name}`;
-    }
+  const renderGameInfo = () => {
+    const winner = Game.getWinner();
+    const message = winner.length > 0
+      ? `${winner[0]} is the winner!`
+      : `${Game.getActivePlayer().name}`;
+    playerTurnDiv.textContent = message;
   };
-
-  const renderWinner = () => {
-    if (Game.getWinner().length > 0) {
-      playerTurnDiv.textContent = `${Game.getWinner()[0]} is the winner!`;
-    }
-  }
 
   const render = () => {
     renderBoard();
-    renderPlayerTurn();
-    renderWinner();
+    renderGameInfo();
   };
 
   const handleSquareClick = (row, column) => {
-    if (Game.getWinner().length === 0) {
-      Game.play(row, column);
-      render();
-    } else {
-      Game.reset();
-      render();
-    }
+    const isGameOver = Game.getWinner().length > 0;
+    isGameOver ? Game.reset() : Game.play(row, column);
+    render();
   };
       
   const handleBoardClick = (e) => {
