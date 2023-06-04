@@ -42,7 +42,8 @@ const Game = (function() {
     const isWinner = checkWinner(row, column, squareMarked);
     if (isWinner) {
       console.log(`${getActivePlayer().name} is the winner`);
-      // TODO: Reset
+      // TODO: check draw
+      // Reset
     }
     // TODO: wtf is this...
     return squareMarked ? (switchActivePlayer(), Gameboard.getBoard()) : Gameboard.getBoard();
@@ -95,12 +96,15 @@ const Game = (function() {
 const UI = (function() {
   // DOM
   const boardDiv = document.querySelector('.board');
+  const playerTurnDiv = document.querySelector('.turn');
 
   // Bind events
   boardDiv.addEventListener("click", (e) => handleBoardClick(e));
 
   const render = () => {
     boardDiv.textContent = '';
+
+    playerTurnDiv.textContent = `${Game.getActivePlayer().name}`;
     
     const board = Gameboard.getBoard();
     let i = 0;

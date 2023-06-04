@@ -5,6 +5,7 @@
 }
 
 body {
+  font-family: 'Montserrat', sans-serif;
   height: 100svh;
   background-color: #000;
   color: #fff;
@@ -13,8 +14,13 @@ body {
 .container {
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.turn {
+  margin-bottom: 40px;
 }
 
 .board {
@@ -25,7 +31,6 @@ body {
 }
 
 .board__square {
-  font-family: 'Montserrat', sans-serif;
   border: 3px solid #fff;
   border-top-width: 0;
   border-left-width: 0;
