@@ -20,6 +20,19 @@ body {
   align-items: center;
 }
 
+.setting {
+  position: absolute;
+  padding: 20px;
+  top: 0;
+  right: 0;
+}
+
+img {
+  height: 25px;
+  width: 25px;
+  cursor: grab;
+}
+
 .turn {
   margin-bottom: 40px;
 }
