@@ -140,21 +140,24 @@ const UI = (() => {
   boardContainer.addEventListener("click", (e) => handleBoardClick(e));
 
   const renderBoard = () => {
-    boardContainer.textContent = '';
-    
+    boardContainer.innerHTML = '';
+  
     const board = Gameboard.getBoard();
-    let i = 0;
-    board.forEach((row) => {
-      row.forEach((square, index) => {
-        const squareDiv = document.createElement('div');
-        squareDiv.classList.add('board__square');
-        squareDiv.dataset.row = i;
-        squareDiv.dataset.column = index;
-        squareDiv.textContent = square;
+    board.forEach((row, i) =>
+      row.forEach((square, j) => {
+        const squareDiv = createSquareDiv(i, j, square);
         boardContainer.appendChild(squareDiv);
-      });
-      i++;
-    });
+      })
+    );
+  };
+  
+  const createSquareDiv = (row, column, value) => {
+    const squareDiv = document.createElement('div');
+    squareDiv.classList.add('board__square');
+    squareDiv.dataset.row = row;
+    squareDiv.dataset.column = column;
+    squareDiv.textContent = value;
+    return squareDiv;
   };
 
   const renderGameInfo = () => {
