@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 body {
@@ -39,6 +40,7 @@ body {
   align-items: center;
   font-size: 6rem;
   font-weight: bold;
+  cursor: grab;
 }
 
 .board__square:nth-child(3n+0) {

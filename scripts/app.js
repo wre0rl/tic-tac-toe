@@ -151,7 +151,7 @@ const UI = (() => {
   const renderGameInfo = () => {
     const winner = Game.getWinner();
     const message = winner.length > 0
-      ? `${winner[0]} is the winner!`
+      ? `${winner[0]} win!`
       : `${Game.getActivePlayer().name}'s turn`;
     playerTurnDiv.textContent = message;
   };
@@ -175,7 +175,3 @@ const UI = (() => {
       
   render();
 })();
-      
-      
-
-
