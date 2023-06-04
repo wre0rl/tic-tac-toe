@@ -47,28 +47,16 @@ const Game = (function() {
     const isSquareMarked = markSquare(row, column);
 
     if (!isSquareMarked) {
-      return;
+      return console.log('That square is marked!');
     }
 
     const isWinner = checkWinner(row, column, getActivePlayer().mark);
-
-    if (isWinner) {
-      winner.push(getActivePlayer().name);
-    } else {
-      switchActivePlayer();
-    }
+    isWinner ? winner.push(getActivePlayer().name) : switchActivePlayer();
   };
 
   const markSquare = (row, column) => {
     const currentPlayerMark = getActivePlayer().mark;
-    const isSquareMarked = Gameboard.markSquare(currentPlayerMark, row, column);
-
-    if (!isSquareMarked) {
-      console.log('That square is marked!');
-      return false;
-    }
-
-    return true;
+    return Gameboard.markSquare(currentPlayerMark, row, column);
   };
 
   const checkWinner = (row, column, squareMarked) => {
@@ -164,7 +152,7 @@ const UI = (() => {
     const winner = Game.getWinner();
     const message = winner.length > 0
       ? `${winner[0]} is the winner!`
-      : `${Game.getActivePlayer().name}`;
+      : `${Game.getActivePlayer().name}'s turn`;
     playerTurnDiv.textContent = message;
   };
 
