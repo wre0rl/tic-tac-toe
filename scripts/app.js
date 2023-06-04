@@ -16,17 +16,23 @@ const Gameboard = (() => {
 
   const resetBoard = () => createBoard();
 
-  const markSquare = (player, row, column) => {
-    const square = board[row][column];
-    return square ? false : (board[row][column] = player);
-  }
+  const markSquare = (mark, row, column) => {
+    const isSquareEmpty = (board[row][column] === '');
+    return isSquareEmpty ? (board[row][column] = mark) : false;
+  };
 
+  const isBoardNotFull = () => {
+    const board = getBoard().flat();
+    return board.includes('');
+  }
+  
   createBoard();
 
   return {
     getBoard,
     resetBoard,
-    markSquare
+    markSquare,
+    isBoardNotFull
   };
 })();
 
@@ -41,7 +47,7 @@ const Game = (function() {
   const players = [player1, player2];
 
   let activePlayer = players[0];
-  let winner = [];
+  let gameState = 0; // 1: win, 2: tie
 
   const play = (row, column) => {
     const isSquareMarked = markSquare(row, column);
@@ -51,7 +57,16 @@ const Game = (function() {
     }
 
     const isWinner = checkWinner(row, column, getActivePlayer().mark);
-    isWinner ? winner.push(getActivePlayer().name) : switchActivePlayer();
+    if (isWinner) {
+      return updateGameState(1);
+    }
+
+    const isBoardNotFull = Gameboard.isBoardNotFull();
+    if (!isBoardNotFull) {
+      return updateGameState(2);
+    }
+
+    switchActivePlayer();
   };
 
   const markSquare = (row, column) => {
@@ -100,21 +115,27 @@ const Game = (function() {
 
   const getPlayers = () => players;
 
-  const getWinner = () => winner;
+  const getGameState = () => gameState;
 
-  const resetWinner = () => winner = [];
+  const updateGameState = (state) => {
+    gameState = state;
+  };
+
+  const resetGameState = () => {
+    gameState = 0;
+  };
 
   const reset = () => {
     Gameboard.resetBoard();
-    resetWinner();
     resetActivePlayer();
+    resetGameState();
   };
 
   return {
     play,
     getPlayers,
     getActivePlayer,
-    getWinner,
+    getGameState,
     reset
   };
 })();
@@ -149,10 +170,13 @@ const UI = (() => {
   };
 
   const renderGameInfo = () => {
-    const winner = Game.getWinner();
-    const message = winner.length > 0
-      ? `${winner[0]} win!`
-      : `${Game.getActivePlayer().name}'s turn`;
+    const state = Game.getGameState();
+    const player = Game.getActivePlayer().name;
+    const message = (state === 1)
+      ? `${player} wins!`
+      : (state === 2)
+        ? 'It\'s a tie!'
+        : `${player}'s turn`;
     playerTurnDiv.textContent = message;
   };
 
@@ -162,8 +186,9 @@ const UI = (() => {
   };
 
   const handleSquareClick = (row, column) => {
-    const isGameOver = Game.getWinner().length > 0;
-    isGameOver ? Game.reset() : Game.play(row, column);
+    const state = Game.getGameState();
+    const isGameOver = (state > 0);
+    (isGameOver) ? Game.reset() : Game.play(row, column);
     render();
   };
       
