@@ -1,25 +1,31 @@
-const Gameboard = (function() {
+const Gameboard = (() => {
   const rows = 3;
   const columns = 3;
   const board = [];
 
-  // Create
-  for (let i = 0; i < rows; i++) {
-    board[i] = [];
-    for (let j = 0; j < columns; j++) {
-      board[i].push('');
+  const createBoard = () => {
+    for (let i = 0; i < rows; i++) {
+      board[i] = [];
+      for (let j = 0; j < columns; j++) {
+        board[i].push('');
+      }
     }
-  }
+  };
 
   const getBoard = () => board;
 
+  const resetBoard = () => createBoard();
+
   const markSquare = (player, row, column) => {
     const square = board[row][column];
-    return square ? console.log('That square is marked!') : (board[row][column] = player);
+    return square ? false : (board[row][column] = player);
   }
+
+  createBoard();
 
   return {
     getBoard,
+    resetBoard,
     markSquare
   };
 })();
@@ -35,19 +41,35 @@ const Game = (function() {
   const players = [player1, player2];
 
   let activePlayer = players[0];
+  let winner = [];
 
   const play = (row, column) => {
-    const currentPlayerMark = getActivePlayer().mark;
-    const squareMarked = Gameboard.markSquare(currentPlayerMark, row, column);
-    const isWinner = checkWinner(row, column, squareMarked);
-    if (isWinner) {
-      console.log(`${getActivePlayer().name} is the winner`);
-      // TODO: check draw
-      // Reset
+    const isSquareMarked = markSquare(row, column);
+
+    if (!isSquareMarked) {
+      return;
     }
-    // TODO: wtf is this...
-    return squareMarked ? (switchActivePlayer(), Gameboard.getBoard()) : Gameboard.getBoard();
-  }
+
+    const isWinner = checkWinner(row, column, getActivePlayer().mark);
+
+    if (isWinner) {
+      winner.push(getActivePlayer().name);
+    } else {
+      switchActivePlayer();
+    }
+  };
+
+  const markSquare = (row, column) => {
+    const currentPlayerMark = getActivePlayer().mark;
+    const isSquareMarked = Gameboard.markSquare(currentPlayerMark, row, column);
+
+    if (!isSquareMarked) {
+      console.log('That square is marked!');
+      return false;
+    }
+
+    return true;
+  };
 
   const checkWinner = (row, column, squareMarked) => {
     const board = Gameboard.getBoard();
@@ -78,6 +100,10 @@ const Game = (function() {
            rightDiagonal.every((mark) => mark === squareMarked)
   };
 
+  const resetActivePlayer = () => {
+    activePlayer = players[0];
+  };
+
   const switchActivePlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
@@ -86,25 +112,35 @@ const Game = (function() {
 
   const getPlayers = () => players;
 
+  const getWinner = () => winner;
+
+  const resetWinner = () => winner = [];
+
+  const reset = () => {
+    Gameboard.resetBoard();
+    resetWinner();
+    resetActivePlayer();
+  };
+
   return {
     play,
     getPlayers,
-    getActivePlayer
+    getActivePlayer,
+    getWinner,
+    reset
   };
 })();
 
-const UI = (function() {
+const UI = (() => {
   // DOM
-  const boardDiv = document.querySelector('.board');
+  const boardContainer = document.querySelector('.board');
   const playerTurnDiv = document.querySelector('.turn');
 
   // Bind events
-  boardDiv.addEventListener("click", (e) => handleBoardClick(e));
+  boardContainer.addEventListener("click", (e) => handleBoardClick(e));
 
-  const render = () => {
-    boardDiv.textContent = '';
-
-    playerTurnDiv.textContent = `${Game.getActivePlayer().name}`;
+  const renderBoard = () => {
+    boardContainer.textContent = '';
     
     const board = Gameboard.getBoard();
     let i = 0;
@@ -115,20 +151,51 @@ const UI = (function() {
         squareDiv.dataset.row = i;
         squareDiv.dataset.column = index;
         squareDiv.textContent = square;
-        boardDiv.appendChild(squareDiv);
+        boardContainer.appendChild(squareDiv);
       });
       i++;
     });
   };
 
+  const renderPlayerTurn = () => {
+    if (Game.getWinner().length > 0) {
+      playerTurnDiv.textContent = `${Game.getActivePlayer().name} is the winner!`;
+    } else {
+      playerTurnDiv.textContent = `${Game.getActivePlayer().name}`;
+    }
+  };
+
+  const renderWinner = () => {
+    if (Game.getWinner().length > 0) {
+      playerTurnDiv.textContent = `${Game.getWinner()[0]} is the winner!`;
+    }
+  }
+
+  const render = () => {
+    renderBoard();
+    renderPlayerTurn();
+    renderWinner();
+  };
+
+  const handleSquareClick = (row, column) => {
+    if (Game.getWinner().length === 0) {
+      Game.play(row, column);
+      render();
+    } else {
+      Game.reset();
+      render();
+    }
+  };
+      
   const handleBoardClick = (e) => {
     const row = e.target.dataset.row;
     const column = e.target.dataset.column;
-    Game.play(row, column);
-    render();
+    handleSquareClick(row, column);
   };
-
+      
   render();
 })();
+      
+      
 
 
