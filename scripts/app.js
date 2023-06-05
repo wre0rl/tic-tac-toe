@@ -55,18 +55,21 @@ const Game = (function() {
     const isSquareMarked = markSquare(row, column);
 
     if (!isSquareMarked) {
-      return console.log('That square is marked!');
+       console.log('That square is marked!');
+       return;
     }
 
     const isWinner = checkForWin(row, column, getActivePlayer().mark);
     if (isWinner) {
-      return updateGameState(1);
+      updateGameState(1);
+      return;
     }
 
     // Check for tie function?
     const isBoardNotFull = Gameboard.isBoardNotFull();
     if (!isBoardNotFull) {
-      return updateGameState(2);
+      updateGameState(2);
+      return;
     }
 
     switchActivePlayer();
@@ -140,6 +143,8 @@ const Game = (function() {
   };
 })();
 
+// TODO: Don't handle the logic of the game in renderGameInfo and handleSquareClick here?
+//       Set the message in Game?
 const UI = (() => {
   // DOM
   const boardContainer = document.querySelector('.board');
